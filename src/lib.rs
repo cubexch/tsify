@@ -36,7 +36,9 @@ pub trait Tsify {
     where
         Self: serde::Serialize,
     {
-        serde_wasm_bindgen::to_value(self).map(JsCast::unchecked_from_js)
+        let serializer = serde_wasm_bindgen::Serializer::new()
+            .serialize_large_number_types_as_bigints(true);
+        self.serialize(&serializer).map(JsCast::unchecked_from_js)
     }
 
     #[cfg(feature = "js")]
